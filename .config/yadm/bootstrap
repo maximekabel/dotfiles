@@ -1,0 +1,17 @@
+#!/bin/bash
+# Check if yay is installed, if not, install it.
+if ! pacman -Qs yay > /dev/null ; then
+    sudo pacman -S --needed git base-devel
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    sudo makepkg -si
+    cd $HOME
+    rm -r yay
+fi
+
+# Install all default packages
+yay -S - < ~/.config/yadm/pkglist.txt
+
+sudo systemctl enable --now networkmanager.service sddm
+
+systemctl --user enable ssh-agent.service pipewire-pulse.service
