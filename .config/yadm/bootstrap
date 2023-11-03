@@ -12,6 +12,7 @@ fi
 # Install all default packages
 yay -S - < ~/.config/yadm/pkglist.txt
 
-sudo systemctl enable --now networkmanager.service sddm
+sudo ln -s ~/.config/systemd/suspend@.service /etc/systemd/system/
+sudo systemctl enable --now networkmanager.service sddm suspend@max
 
 systemctl --user enable ssh-agent.service pipewire-pulse.service
