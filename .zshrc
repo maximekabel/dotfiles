@@ -101,7 +101,7 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
-setopt nocompletealiases
+#setopt nocompletealiases
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -111,10 +111,12 @@ setopt nocompletealiases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias sudo='sudo '
+#alias sudo='sudo '
 alias vim='nvim'
 alias ssys='sudo systemctl'
 alias ip='ip -c'
+alias s="kitten ssh"
+alias ser='sudo screen /dev/ttyUSB0 9600'
 
 
 PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "

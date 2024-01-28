@@ -17,7 +17,7 @@
 },
     
 "battery": {
-  "interval": 60,
+  "interval": 15,
   "align": 0,
   "rotate": 0,
   //"bat": "BAT1",
@@ -145,7 +145,7 @@
   //"format": "{icon}",
   "show-special": false,
   "on-click": "activate",
-  "all-outputs": true,
+  "all-outputs": false,
   "sort-by-number": true,
   "format-icons": {
     "1": "main  ",
