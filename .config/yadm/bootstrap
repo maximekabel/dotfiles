@@ -6,7 +6,7 @@ if ! pacman -Qs yay > /dev/null ; then
     cd yay
     makepkg -si
     cd $HOME
-    rm -r yay
+    rm -rf yay
 fi
 
 # Install all default packages
