@@ -1,13 +1,11 @@
 base-devel
 
-# Hypr
 hyprpaper
 hyprland
 hyprcursor
 hyprlock
 waybar
 
-# Terminal stuff
 kitty
 fwupd
 fzf
@@ -21,7 +19,6 @@ zsh
 zsh-autosuggestions
 git
 
-# Utilities
 grim
 dunst
 pavucontrol
@@ -35,7 +32,6 @@ networkmanager
 sddm
 
 
-# Applications
 obsidian
 code
 firefox
@@ -43,7 +39,6 @@ evince
 telegram-desktop
 nextcloud-client
 
-# Libs
 libnotify
 libva-mesa-driver
 libva-utils
