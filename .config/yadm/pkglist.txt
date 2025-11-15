@@ -4,6 +4,8 @@ hyprpaper
 hyprland
 hyprcursor
 hyprlock
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
 waybar
 
 kitty
@@ -11,7 +13,7 @@ fwupd
 fzf
 man-db
 neovim
-ranger
+yazi
 unzip
 vim
 zip
@@ -30,6 +32,14 @@ htop
 network-manager-applet
 networkmanager
 sddm
+tofi
+seahorse
+swappy
+nwg-look
+feh
+nmap
+reflector
+wttrbar
 
 
 obsidian
@@ -38,6 +48,13 @@ firefox
 evince
 telegram-desktop
 nextcloud-client
+vesktop
+kleopatra
+thunderbird
+nemo
+spotify
+discord
+gimp
 
 libnotify
 libva-mesa-driver
@@ -51,4 +68,10 @@ openssh
 polkit-kde-agent
 python-pipenv
 qt5-wayland
+qt6-wayland
 slurp
+noise-suppression-for-voice
+dracula-gtk-theme
+dracula-cursors-git
+dracula-icons-git
+hyprcursor-dracula-kde-git

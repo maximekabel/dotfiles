@@ -11,6 +11,7 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 export TERM="xterm-kitty"
 export EDITOR='nvim'
+export SUDO_EDITOR='nvim'
 export VISUAL='nvim'
 export FZF_BASE="/usr/bin/fzf"
 
@@ -115,8 +116,11 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 alias vim='nvim'
 alias ssys='sudo systemctl'
 alias ip='ip -c'
-alias s="kitten ssh"
+alias ssh="kitten ssh"
 alias ser='sudo screen /dev/ttyUSB0 9600'
 
 
 PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+[ -s "/home/max/.jabba/jabba.sh" ] && source "/home/max/.jabba/jabba.sh"
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#Device name variable
+#devicename="alsa_output.pci-0000_25_00.3.analog-stereo"
+devicename="alsa_output.pci-0000_08_00.4.analog-stereo"
+
+#change the default sink
+pactl set-default-sink "$devicename"
+
+#move all inputs to the new sink
+for app in $(pactl list short sink-inputs | awk '{print $1}');
+do
+	pactl move-sink-input $app "$devicename"
+done

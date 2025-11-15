@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#Device name variable
+#devicename="alsa_output.pci-0000_23_00.1.hdmi-stereo-extra1"
+#devicename="alsa_output.usb-Apple__Inc._USB-C_to_3.5mm_Headphone_Jack_Adapter_DWH1027007UL1MQAB-00.analog-stereo"
+#devicename="alsa_output.usb-Apple__Inc._USB-C_to_3.5mm_Headphone_Jack_Adapter_DWH1027007UL1MQAB-00.3.analog-stereo"
+devicename=$(pactl list sinks short | grep Apple | awk '{print $2}')
+
+#change the default sink
+pactl set-default-sink "$devicename"
+
+#move all inputs to the new sink
+for app in $(pactl list short sink-inputs | awk '{print $1}');
+do
+	pactl move-sink-input $app "$devicename"
+done

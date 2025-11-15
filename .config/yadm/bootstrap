@@ -1,7 +1,13 @@
 #!/bin/bash
+# Enable Multilib repo
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+# Enable color
+sed -i "/Color/"'s/^#//' /etc/pacman.conf
+
 # Check if yay is installed, if not, install it.
 if ! pacman -Qs yay > /dev/null ; then
-    sudo pacman -S --needed git base-devel
+    sudo pacman -Syu --needed git base-devel
+    cd $HOME
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si
@@ -10,7 +16,7 @@ if ! pacman -Qs yay > /dev/null ; then
 fi
 
 # Install all default packages
-yay -S - < ~/.config/yadm/pkglist.txt
+yay -Sg --needed --noconfirm - < ~/.config/yadm/pkglist.txt
 
 sudo ln -s ~/.config/systemd/suspend@.service /etc/systemd/system/
 sudo systemctl enable --now networkmanager.service sddm suspend@max

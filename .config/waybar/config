@@ -17,17 +17,15 @@
 "modules-left": [
 	"hyprland/workspaces", 
 	"cpu", 
-	"temperature", 
+	//"temperature", 
 	"memory",
-	//"disk", 
+	"disk", 
 	"custom/weather",
 	],
   
 "modules-center": [
 	"custom/menu", 
 	"clock",
-	//"custom/cycle_wall",	
-	"custom/lock",	
 	], 
 
 "modules-right": [

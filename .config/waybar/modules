@@ -76,8 +76,8 @@
  
 "clock": {
   //"format": " {:%I:%M %p}",
-  "format": " {:%H:%M}",
-  "format-alt": " {:%H:%M   %Y, %d %B, %A}",
+  "format-alt": " {:%H:%M}",
+  "format": " {:%H:%M   %Y, %d %B, %A}",
   "tooltip-format": "<tt><small>{calendar}</small></tt>",
   "calendar": {
     "mode"          : "year",
@@ -115,7 +115,8 @@
   //"format": "󰋊",
   "path": "/",
   //"format-alt-click": "click",
-  "format": "{percentage_used}% 󰋊",
+  //"format": "{percentage_used}% 󰋊",
+  "format": "{free} 󰋊",
   //"tooltip": true,
   "tooltip-format": "{used} used out of {total} on {path} ({percentage_used}%)",
 },
@@ -262,8 +263,8 @@
 "wireplumber": {
   "format": "{icon} {volume} %",
   "format-muted": " Mute",
-  "on-click": "~/.config/hypr/scripts/Volume.sh --toggle",
-  "on-click-right": "pavucontrol -t 3",
+  "on-click-right": "~/.config/hypr/scripts/Volume.sh --toggle",
+  "on-click": "pavucontrol -t 3",
   "on-scroll-up": "~/.config/hypr/scripts/Volume.sh --inc",
   "on-scroll-down": "~/.config/hypr/scripts/Volume.sh --dec",
   "format-icons": ["", "", "󰕾", ""], 
@@ -332,17 +333,13 @@
   "on-click": "foot -T update paru -Syu || yay -Syu && notify-send 'The system has been updated'",
   "on-click-right": "~/.config/hypr/scripts/WallpaperSwitch.sh",
 },
-  
+
 "custom/weather": {
-  "format": "{}",
-  "format-alt": "{alt}: {}",
-  "format-alt-click": "click",
-  "interval": 3600,
-  "return-type": "json",
-  "exec": "~/.config/hypr/scripts/Weather.sh",
-  //"exec": "~/.config/hypr/scripts/Weather.py",
-  "exec-if": "ping wttr.in -c1",
-  "tooltip" : true,
+    "format": "{}°",
+    "tooltip": true,
+    "interval": 3600,
+    "exec": "wttrbar --location son-en-breugel",
+    "return-type": "json",
+    "on-click": "firefox https://www.buienradar.nl/weer/Son/NL/2747010",
 },
-     
 }
