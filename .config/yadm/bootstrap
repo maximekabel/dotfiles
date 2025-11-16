@@ -23,8 +23,8 @@ fi
 # ----------------------------------------------------------------------
 # 3. Define Dynamic Packages & File Paths
 # ----------------------------------------------------------------------
-PACMAN_FILE="~/.config/yadm/pkglist.txt"
-AUR_FILE="~/.config/yadm/aur_pkglist.txt"
+PACMAN_FILE="$HOME/.config/yadm/pkglist.txt"
+AUR_FILE="$HOME/.config/yadm/aur_pkglist.txt"
 
 # Array for packages to be added *dynamically* based on hardware
 dynamic_pkgs=()
@@ -80,7 +80,8 @@ fi
 # ----------------------------------------------------------------------
 echo "Installing official packages from $PACMAN_FILE and dynamic list..."
 # Reads from your pkglist.txt (stdin) AND appends dynamic packages
-sudo pacman -Syu --needed --noconfirm - < "$PACMAN_FILE" "${dynamic_pkgs[@]}"
+sudo pacman -Syu --needed --noconfirm - < "$PACMAN_FILE"
+sudo pacman -Syu --needed --noconfirm - < "${dynamic_pkgs[@]}"
 
 echo "Installing AUR packages from $AUR_FILE..."
 # Reads from your aur_pkglist.txt (stdin)
@@ -90,7 +91,7 @@ yay -S --needed --noconfirm - < "$AUR_FILE"
 # ----------------------------------------------------------------------
 # 6. Enable System Services
 # ----------------------------------------------------------------------
-sudo systemctl enable --now networkmanager.service
+sudo systemctl enable --now NetworkManager.service
 sudo systemctl enable --now systemd-timesyncd.service
 sudo systemctl enable fstrim.service
 sudo systemctl enable reflector.timer
@@ -104,7 +105,11 @@ systemctl --user enable wireplumber.service
 systemctl --user enable ssh-agent.service
 
 # ----------------------------------------------------------------------
-# 7. Set Default Shell
+# 7. Install vim plugins
+# ----------------------------------------------------------------------
+nvim -c "PlugInstall" -c "qa!"
+# ----------------------------------------------------------------------
+# 8. Set Default Shell
 # ----------------------------------------------------------------------
 if [ "$SHELL" != "/bin/zsh" ]; then
     echo "Changing default shell to zsh..."
