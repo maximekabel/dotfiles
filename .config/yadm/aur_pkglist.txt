@@ -1,0 +1,7 @@
+tofi
+wttrbar
+dracula-gtk-theme
+dracula-cursors-git
+dracula-icons-git
+hyprcursor-dracula-kde-git
+oh-my-zsh-git
