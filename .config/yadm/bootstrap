@@ -1,24 +1,116 @@
 #!/bin/bash
 # Enable Multilib repo
+# ----------------------------------------------------------------------
+# 1. Configure Pacman
+# ----------------------------------------------------------------------
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 # Enable color
 sed -i "/Color/"'s/^#//' /etc/pacman.conf
 
-# Check if yay is installed, if not, install it.
-if ! pacman -Qs yay > /dev/null ; then
-    sudo pacman -Syu --needed git base-devel
-    cd $HOME
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
-    cd $HOME
-    rm -rf yay
+# ----------------------------------------------------------------------
+# 2. Install AUR Helper (yay)
+# ----------------------------------------------------------------------
+if ! command -v yay &> /dev/null; then
+    echo "Installing AUR helper 'yay'..."
+    sudo pacman -S --needed --noconfirm git base-devel
+    git clone https://aur.archlinux.org/yay.git /tmp/yay
+    (cd /tmp/yay && makepkg -si --noconfirm)
+    rm -rf /tmp/yay
+else
+    echo "'yay' is already installed."
 fi
 
-# Install all default packages
-yay -Sg --needed --noconfirm - < ~/.config/yadm/pkglist.txt
+# ----------------------------------------------------------------------
+# 3. Define Dynamic Packages & File Paths
+# ----------------------------------------------------------------------
+PACMAN_FILE="~/.config/yadm/pkglist.txt"
+AUR_FILE="~/.config/yadm/aur_pkglist.txt"
 
-sudo ln -s ~/.config/systemd/suspend@.service /etc/systemd/system/
-sudo systemctl enable --now networkmanager.service sddm suspend@max
+# Array for packages to be added *dynamically* based on hardware
+dynamic_pkgs=()
 
-systemctl --user enable ssh-agent.service pipewire-pulse.service
+# ----------------------------------------------------------------------
+# 4 Detect CPU and add Microcode
+# ----------------------------------------------------------------------
+echo "Detecting CPU vendor for microcode..."
+VENDOR=$(lscpu | grep "Vendor ID:" | awk '{print $3}')
+
+if [ "$VENDOR" = "GenuineIntel" ]; then
+    echo "Intel CPU detected. Adding 'intel-ucode'."
+    dynamic_pkgs+=("intel-ucode")
+    
+    echo "----------------------------------------------------------------------"
+    echo "🚨 IMPORTANT BOOTLOADER WARNING 🚨"
+    echo "You MUST manually add 'initrd /intel-ucode.img' to your"
+    echo "bootloader entry (e.g., /boot/loader/entries/arch.conf)"
+    echo "BEFORE the main 'initrd /initramfs-linux.img' line."
+    echo "----------------------------------------------------------------------"
+
+elif [ "$VENDOR" = "AuthenticAMD" ]; then
+    echo "AMD CPU detected. Adding 'amd-ucode'."
+    dynamic_pkgs+=("amd-ucode")
+
+    echo "----------------------------------------------------------------------"
+    echo "🚨 IMPORTANT BOOTLOADER WARNING 🚨"
+    echo "You MUST manually add 'initrd /amd-ucode.img' to your"
+    echo "bootloader entry (e.g., /boot/loader/entries/arch.conf)"
+    echo "BEFORE the main 'initrd /initramfs-linux.img' line."
+    echo "----------------------------------------------------------------------"
+else
+    echo "Warning: Could not determine CPU vendor ('$VENDOR'). Microcode not added."
+fi
+# ----------------------------------------------------------------------
+# 4.6. Detect NVIDIA GPU and add drivers
+# ----------------------------------------------------------------------
+echo "Checking for NVIDIA GPU..."
+if lspci | grep -q -i "NVIDIA"; then
+    echo "NVIDIA GPU detected. Adding drivers to package list."
+    dynamic_pkgs+=(
+        "nvidia-open"
+        "nvidia-utils"
+        "lib32-nvidia-utils"
+        "libva-nvidia-driver"
+        "egl-wayland"
+    )
+else
+    echo "No NVIDIA GPU detected. Skipping NVIDIA drivers."
+fi
+# ----------------------------------------------------------------------
+# 5. Install Packages
+# ----------------------------------------------------------------------
+echo "Installing official packages from $PACMAN_FILE and dynamic list..."
+# Reads from your pkglist.txt (stdin) AND appends dynamic packages
+sudo pacman -Syu --needed --noconfirm - < "$PACMAN_FILE" "${dynamic_pkgs[@]}"
+
+echo "Installing AUR packages from $AUR_FILE..."
+# Reads from your aur_pkglist.txt (stdin)
+yay -S --needed --noconfirm - < "$AUR_FILE"
+
+
+# ----------------------------------------------------------------------
+# 6. Enable System Services
+# ----------------------------------------------------------------------
+sudo systemctl enable --now networkmanager.service
+sudo systemctl enable --now systemd-timesyncd.service
+sudo systemctl enable fstrim.service
+sudo systemctl enable reflector.timer
+
+
+echo "Enabling PipeWire user services..."
+systemctl --user enable pipewire.socket
+systemctl --user enable pipewire-pulse.socket
+systemctl --user enable wireplumber.service
+
+systemctl --user enable ssh-agent.service
+
+# ----------------------------------------------------------------------
+# 7. Set Default Shell
+# ----------------------------------------------------------------------
+if [ "$SHELL" != "/bin/zsh" ]; then
+    echo "Changing default shell to zsh..."
+    chsh -s /bin/zsh
+else
+    echo "Default shell is already zsh."
+fi
+
+echo "✅ Bootstrap complete! Please reboot."
